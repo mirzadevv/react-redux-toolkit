@@ -1,25 +1,27 @@
-import logo from './logo.svg';
-import './App.css';
+import { useDispatch, useSelector } from "react-redux";
+import { increment, decrement, setCount } from "./store/slices/count";
+import { getUsers } from "./store/slices/users";
 
-function App() {
+export default function App() {
+  const dispatch = useDispatch();
+  const { count } = useSelector((state) => state.count);
+  const { usersList, status } = useSelector((state) => state.users);
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <>
+      <p> App Compoent {count}</p>
+      <button onClick={() => dispatch(increment())}>+</button>
+      <button onClick={() => dispatch(decrement())}>-</button>
+      <button onClick={() => dispatch(setCount(20))}>setCountTo20</button>
+      <button onClick={() => dispatch(getUsers({ limit: 5 }))}>
+        get users
+      </button>
+
+      <div>
+        <h3>Users List</h3>
+        {status === "loading" && <p>loading ...</p>}
+        {status === "failed" && <p> failed </p>}
+        {status === "success" && usersList.map((item) => item.name)}
+      </div>
+    </>
   );
 }
-
-export default App;
